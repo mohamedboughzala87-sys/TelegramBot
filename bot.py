@@ -101,12 +101,12 @@ LOCALES['fa'] = {
     'btn_guide': "📖 راهنمای پرداخت",
     'btn_lang': "🌐 تغییر زبان / Language",
     'pkg_title': "💎 **پکیج‌های رشد** 💎\n\n📌 پکیج مورد نظر را برای صدور فاکتور انتخاب کنید:",
-    'invoice': "┌─── ❖ ⚙️ **فاکتور هوشمند** ❖ ───────┐\n\n🆔 **شماره سفارش:** `#{order_id}`\n📦 **خدمات:** {name}\n💰 **مبلغ:** `{price}$ USDT` *(TRC-20)*\n\n📥 **آدرس ولت:**\n`{wallet}`\n\n🔄 پس از انتقال، برای فعال‌سازی دکمه زیر را فشار دهید!\n└───❖ Meta data ───✦───❖ ───┘",
+    'invoice': "┌─── ❖ ⚙️ **فاکتور هوشمند** ❖ ───────┐\n\n🆔 **شماره سفارش:** `#{order_id}`\n📦 **خدمات:** {name}\n💰 **مبلغ:** `{price}$ USDT` *(TRC-20)*\n\n📥 **آدرس ولت:**\n`{wallet}`\n\n🔄 پس از انتقال، برای فعال‌سازی دکمه زیر را فشار دهید!\n└───❖───✦───❖───┘",
     'btn_verify': "🔄 تایید خودکار پرداخت",
     'guide': "📖 **راهنما:**\n1️⃣ ولت کریپتو خود را باز کنید.\n2️⃣ ارز USDT (TRC-20) ارسال کنید.\n3️⃣ آدرس ولت بات را کپی کرده و وجه را ارسال کنید."
 }
 LOCALES['es'] = {
-    'welcome': "✨ **Plataforma Global de Crecimiento de Canales** ✨\n\n🚀 Tu forma más rápida de potenciar tu canal con miembros reales.",
+    'welcome': "✨ **Plataforma Global de Crecimiento de Canales** ✨\n\n🚀 Tu forma más rápida Tobacco de potenciar tu canal con miembros reales.",
     'choose': "👇 Elige del menú de abajo:",
     'btn_promo': "💎 Paquetes de Promoción",
     'btn_guide': "📖 Guide de Pago",

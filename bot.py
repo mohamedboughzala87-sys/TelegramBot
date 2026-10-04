@@ -174,12 +174,20 @@ def get_user_lang(user_id):
     except:
         return 'ar'
 
-    
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     init_db()
-    # هنا يمكنك كتابة نص الترحيب، كمثال:
-    bot.reply_to(message, "مرحباً بك في البوت!")
+    user_id = message.from_user.id
+    lang = get_user_lang(user_id)
+    
+    # جلب نص الترحيب حسب لغة المستخدم المبرمجة في الكود
+    welcome_text = LOCALES.get(lang, LOCALES['ar'])['welcome']
+    
+    # إنشاء أزرار اختيار اللغة
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn_ar = types.KeyboardButton("العربية 🇹🇳")
+    btn_en = types.KeyboardButton("English 🇬🇧")
+    markup.add(btn_ar, btn
+        bot.reply_to(message, welcome_text, reply_markup=markup)
 
-# السطر النهائي والضروري لتشغيل البوت بشكل مستمر
 bot.infinity_polling()

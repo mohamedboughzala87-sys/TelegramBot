@@ -109,35 +109,30 @@ def handle_buttons(message):
     lang = get_user_lang(user_id)
     texts = LOCALES.get(lang, LOCALES['ar'])
     
-    # فحص زر دليل الدفع بجميع اللغات الـ 10 لضمان الاستجابة الفورية
     is_guide = any(message.text == LOCALES[l].get('btn_guide') for l in LOCALES)
-    # فحص زر باقات الترويج بجميع اللغات الـ 10 لضمان الاستجابة الفورية
     is_promo = any(message.text == LOCALES[l].get('btn_promo') for l in LOCALES)
-    # فحص زر تغيير اللغة بجميع اللغات الـ 10 لضمان الاستجابة الفورية
     is_lang = any(message.text == LOCALES[l].get('btn_lang') for l in LOCALES)
 
     if is_guide:
         bot.reply_to(message, texts['guide'], parse_mode="Markdown")
-        
-    elif is_promo:
+    elif message.text in [LOCALES[l].get('btn_promo') for l in LOCALES if 'btn_promo' in LOCALES[l]]:
         markup = types.InlineKeyboardMarkup()
         for pkg_id, pkg in PACKAGES.items():
             markup.add(types.InlineKeyboardButton(f"{pkg.get(lang, pkg['ar'])} - {pkg['price']}$", callback_data=f"buy_{pkg_id}"))
         bot.reply_to(message, texts['pkg_title'], reply_markup=markup, parse_mode="Markdown")
-        
     elif is_lang:
         markup = types.InlineKeyboardMarkup(row_width=2)
         markup.add(
-            types.InlineKeyboardButton("العربية 🇹🇳", callback_data="set_lang_ar"),
-            types.InlineKeyboardButton("English 🇬🇧", callback_data="set_lang_en"),
-            types.InlineKeyboardButton("Français 🇫🇷", callback_data="set_lang_fr"),
-            types.InlineKeyboardButton("中文 🇨🇳", callback_data="set_lang_zh"),
-            types.InlineKeyboardButton("Русский 🇷🇺", callback_data="set_lang_ru"),
-            types.InlineKeyboardButton("Türkçe 🇹🇷", callback_data="set_lang_tr"),
-            types.InlineKeyboardButton("Español 🇪🇸", callback_data="set_lang_es"),
-            types.InlineKeyboardButton("Português 🇵🇹", callback_data="set_lang_pt"),
-            types.InlineKeyboardButton("हिन्दी 🇮🇳", callback_data="set_lang_hi"),
-            types.InlineKeyboardButton("فارسی 🇮🇷", callback_data="set_lang_fa")
+            types.InlineKeyboardButton("العربية 🇹🇳", callback_data="lang_ar"),
+            types.InlineKeyboardButton("English 🇬🇧", callback_data="lang_en"),
+            types.InlineKeyboardButton("Français 🇫🇷", callback_data="lang_fr"),
+            types.InlineKeyboardButton("中文 🇨🇳", callback_data="lang_zh"),
+            types.InlineKeyboardButton("Русский 🇷🇺", callback_data="lang_ru"),
+            types.InlineKeyboardButton("Türkçe 🇹🇷", callback_data="lang_tr"),
+            types.InlineKeyboardButton("Español 🇪🇸", callback_data="set_lang_es" if "set_lang_es" in call.data else "lang_es"),
+            types.InlineKeyboardButton("Português 🇵🇹", callback_data="lang_pt"),
+            types.InlineKeyboardButton("हिन्दी 🇮🇳", callback_data="lang_hi"),
+            types.InlineKeyboardButton("فارسی 🇮🇷", callback_data="lang_fa")
         )
         bot.reply_to(message, "🌐 Choose your language / اختر لغتك:", reply_markup=markup)
 
@@ -170,12 +165,15 @@ def callback_verify(call):
         else:
             bot.send_message(call.message.chat.id, "❌ **لم نكتشف أي تحويل جديد بهذه القيمة حتى الآن.**\n\nتأكد من إرسال المبلغ الصحيح وانتظر دقيقة ثم اضغط على الزر مرة أخرى.")
 
-# 11. استقبال خيارات الأزرار المضمنة (Inline Buttons) لتغيير اللغة فوراً
-@bot.callback_query_handler(func=lambda call: call.data.startswith('set_lang_'))
+# 11. استقبال خيارات الأزرار المضمنة لتغيير اللغة فوراً وبشكل متطابق
+@bot.callback_query_handler(func=lambda call: call.data.startswith('lang_'))
 def callback_language(call):
-    user_id = call.from_user.id; new_lang = call.data.replace('set_lang_', ''); set_user_lang(user_id, new_lang)
-    texts = LOCALES.get(new_lang, LOCALES['ar']); bot.answer_callback_query(call.id, "✅ Done / تم التحديث")
-    bot.send_message(call.message.chat.id, f"✅ {texts['welcome']}", reply_markup=get_main_menu(new_lang), parse_mode="Markdown")
+    user_id = call.from_user.id
+    new_lang = call.data.replace('lang_', '')
+    set_user_lang(user_id, new_lang)
+    texts = LOCALES.get(new_lang, LOCALES['ar'])
+    bot.answer_callback_query(call.id, "✅ Done / تم التحديث")
+    bot.send_message(call.message.chat.id, f"✅ {texts['welcome']}\n\n{texts['choose']}", reply_markup=get_main_menu(new_lang), parse_mode="Markdown")
 
 # 12. تشغيل البوت بشكل لانهائي ومستمر
 bot.infinity_polling()

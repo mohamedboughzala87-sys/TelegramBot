@@ -101,7 +101,7 @@ LOCALES['fa'] = {
     'btn_guide': "📖 راهنمای پرداخت",
     'btn_lang': "🌐 تغییر زبان / Language",
     'pkg_title': "💎 **پکیج‌های رشد** 💎\n\n📌 پکیج مورد نظر را برای صدور فاکتور انتخاب کنید:",
-    'invoice': "┌─── ❖ ⚙️ **فاکتور هوشمند** ❖ ───────┐\n\n🆔 **شماره سفارش:** `#{order_id}`\n📦 **خدمات:** {name}\n💰 **مبلغ:** `{price}$ USDT` *(TRC-20)*\n\n📥 **آدرس ولت:**\n`{wallet}`\n\n🔄 پس از انتقال، برای فعال‌سازی دکمه زیر را فشار دهید!\n└───❖───✦───❖───┘",
+    'invoice': "┌─── ❖ ⚙️ **فاکتور هوشمند** ❖ ───────┐\n\n🆔 **شماره سفارش:** `#{order_id}`\n📦 **خدمات:** {name}\n💰 **مبلغ:** `{price}$ USDT` *(TRC-20)*\n\n📥 **آدرس ولت:**\n`{wallet}`\n\n🔄 پس از انتقال، برای فعال‌سازی دکمه زیر را فشار دهید!\n└───❖ Meta data ───✦───❖ ───┘",
     'btn_verify': "🔄 تایید خودکار پرداخت",
     'guide': "📖 **راهنما:**\n1️⃣ ولت کریپتو خود را باز کنید.\n2️⃣ ارز USDT (TRC-20) ارسال کنید.\n3️⃣ آدرس ولت بات را کپی کرده و وجه را ارسال کنید."
 }
@@ -109,7 +109,7 @@ LOCALES['es'] = {
     'welcome': "✨ **Plataforma Global de Crecimiento de Canales** ✨\n\n🚀 Tu forma más rápida de potenciar tu canal con miembros reales.",
     'choose': "👇 Elige del menú de abajo:",
     'btn_promo': "💎 Paquetes de Promoción",
-    'btn_guide': "📖 Guía de Pago",
+    'btn_guide': "📖 Guide de Pago",
     'btn_lang': "🌐 Cambiar Idioma / Language",
     'pkg_title': "💎 **Paquetes de Crecimiento** 💎\n\n📌 Elige un paquete para generar una factura:",
     'invoice': "┌─── ❖ ⚙️ **FACTURA INTELIGENTE** ❖ ───┐\n\n🆔 **ID de Orden:** `#{order_id}`\n📦 **Servicio:** {name}\n💰 **Monto:** `{price}$ USDT` *(TRC-20)*\n\n📥 **Dirección de Billetera:**\n`{wallet}`\n\n🔄 ¡Presiona abajo después de transferir para activar!\n└───❖───✦───❖───┘",
@@ -128,12 +128,12 @@ LOCALES['pt'] = {
     'guide': "📖 **Guide:**\n1️⃣ Abra a sua carteira cripto.\n2️⃣ Envie USDT (TRC-20).\n3️⃣ Copie o endereço do bot e envie os fundos."
 }
 LOCALES['tr'] = {
-    'welcome': "✨ **Küresel Kanal Büyütme Platformu** ✨\n\n🚀 Kanalınızı gerçek üyelerle büyütmenin en快速途径。",
+    'welcome': "✨ **Küresel Kanal Büyütme Platformu** ✨\n\n🚀 Kanalınızı gerçek üyelerle büyütmenin en hızlı yolu.",
     'choose': "👇 Aşağıdaki menüden seçim yapın:",
     'btn_promo': "💎 Paket Tanıtımları",
     'btn_guide': "📖 Basit Ödeme Kılavuzu",
     'btn_lang': "🌐 Dili Değiştir / Language",
-    'pkg_title': "💎 **Büyüme Paketleri** 💎\n\n📌 Fatura oluşturmak için bir paket seçin:",
+    'pkg_title': "💎 **Büyüme Paketleri** 💎\n\n📌 Fatura oluşturmak için bir packet seçin:",
     'invoice': "┌─── ❖ ⚙️ **AKILLI FATURA** ❖ ───┐\n\n🆔 **Sipariş No:** `#{order_id}`\n📦 **Hizmet:** {name}\n💰 **Tutar:** `{price}$ USDT` *(TRC-20)*\n\n📥 **Cüzdan Adresi:**\n`{wallet}`\n\n🔄 Etkinleştirmek için transferden sonra aşağıya basın!\n└───❖───✦───❖───┘",
     'btn_verify': "🔄 Ödemeyi Otomatik Doğrula",
     'guide': "📖 **Kılavuz:**\n1️⃣ Kripto cüzdanınızı açın.\n2️⃣ USDT (TRC-20) gönderin.\n3️⃣ Bot cüzdan adresini kopyalayıp gönderin."
@@ -148,4 +148,3 @@ PACKAGES = {
 # 5. دوال قاعدة البيانات والاتصال الذكي
 def init_db():
     conn = sqlite3.connect("perfect_global.db")
-    cursor = conn.cursor()

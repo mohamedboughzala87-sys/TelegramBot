@@ -74,6 +74,7 @@ def update_order_status(order_id, status):
     conn = sqlite3.connect("perfect_global.db"); cursor = conn.cursor()
     cursor.execute("UPDATE orders SET status = ? WHERE order_id = ?", (status, order_id))
     conn.commit(); conn.close()
+    
 # 6. نظام فحص شبكة البلوكشين تلقائياً للتحقق من وصول الـ USDT (TRC-20)
 def check_blockchain_payment(wallet, expected_amount):
     try:

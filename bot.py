@@ -165,4 +165,21 @@ def init_db():
     conn.close()
 
 def get_user_lang(user_id):
-    conn = sqlite3.connect("perfect_global_wealth.db")
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT lang FROM users WHERE user_id = ?", (user_id,))
+        result = cursor.fetchone()
+        conn.close()
+        return result[0] if result else 'ar'
+    except:
+        return 'ar'
+
+    
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    init_db()
+    # هنا يمكنك كتابة نص الترحيب، كمثال:
+    bot.reply_to(message, "مرحباً بك في البوت!")
+
+# السطر النهائي والضروري لتشغيل البوت بشكل مستمر
+bot.infinity_polling()

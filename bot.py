@@ -102,20 +102,43 @@ def send_welcome(message):
     user_id = message.from_user.id; lang = get_user_lang(user_id); texts = LOCALES.get(lang, LOCALES['ar'])
     bot.reply_to(message, f"{texts['welcome']}\n\n{texts['choose']}", reply_markup=get_main_menu(lang), parse_mode="Markdown")
 
-# 8. استقبال الرسائل وإظهار خيارات الأزرار
+# 8. استقبال الرسائل وإظهار خيارات الأزرار بجميع اللغات العالمية آلياً
 @bot.message_handler(func=lambda message: True)
 def handle_buttons(message):
-    user_id = message.from_user.id; lang = get_user_lang(user_id); texts = LOCALES.get(lang, LOCALES['ar'])
-    if message.text == texts['btn_guide']:
+    user_id = message.from_user.id
+    lang = get_user_lang(user_id)
+    texts = LOCALES.get(lang, LOCALES['ar'])
+    
+    # فحص زر دليل الدفع بجميع اللغات الـ 10 لضمان الاستجابة الفورية
+    is_guide = any(message.text == LOCALES[l].get('btn_guide') for l in LOCALES)
+    # فحص زر باقات الترويج بجميع اللغات الـ 10 لضمان الاستجابة الفورية
+    is_promo = any(message.text == LOCALES[l].get('btn_promo') for l in LOCALES)
+    # فحص زر تغيير اللغة بجميع اللغات الـ 10 لضمان الاستجابة الفورية
+    is_lang = any(message.text == LOCALES[l].get('btn_lang') for l in LOCALES)
+
+    if is_guide:
         bot.reply_to(message, texts['guide'], parse_mode="Markdown")
-    elif message.text == texts['btn_promo']:
+        
+    elif is_promo:
         markup = types.InlineKeyboardMarkup()
         for pkg_id, pkg in PACKAGES.items():
-            markup.add(types.InlineKeyboardButton(f"{pkg.get(lang, pkg['ar'])} - {pkg['price']}\$", callback_data=f"buy_{pkg_id}"))
+            markup.add(types.InlineKeyboardButton(f"{pkg.get(lang, pkg['ar'])} - {pkg['price']}$", callback_data=f"buy_{pkg_id}"))
         bot.reply_to(message, texts['pkg_title'], reply_markup=markup, parse_mode="Markdown")
-    elif message.text == texts['btn_lang']:
+        
+    elif is_lang:
         markup = types.InlineKeyboardMarkup(row_width=2)
-        markup.add(types.InlineKeyboardButton("العربية 🇹🇳", callback_data="set_lang_ar"), types.InlineKeyboardButton("English 🇬🇧", callback_data="set_lang_en"), types.InlineKeyboardButton("Français 🇫🇷", callback_data="set_lang_fr"), types.InlineKeyboardButton("中文 🇨🇳", callback_data="set_lang_zh"), types.InlineKeyboardButton("Русский 🇷🇺", callback_data="set_lang_ru"), types.InlineKeyboardButton("Türkçe 🇹🇷", callback_data="set_lang_tr"), types.InlineKeyboardButton("Español 🇪🇸", callback_data="set_lang_es"), types.InlineKeyboardButton("Português 🇵🇹", callback_data="set_lang_pt"), types.InlineKeyboardButton("हिन्दी 🇮🇳", callback_data="set_lang_hi"), types.InlineKeyboardButton("فارسی 🇮🇷", callback_data="set_lang_fa"))
+        markup.add(
+            types.InlineKeyboardButton("العربية 🇹🇳", callback_data="set_lang_ar"),
+            types.InlineKeyboardButton("English 🇬🇧", callback_data="set_lang_en"),
+            types.InlineKeyboardButton("Français 🇫🇷", callback_data="set_lang_fr"),
+            types.InlineKeyboardButton("中文 🇨🇳", callback_data="set_lang_zh"),
+            types.InlineKeyboardButton("Русский 🇷🇺", callback_data="set_lang_ru"),
+            types.InlineKeyboardButton("Türkçe 🇹🇷", callback_data="set_lang_tr"),
+            types.InlineKeyboardButton("Español 🇪🇸", callback_data="set_lang_es"),
+            types.InlineKeyboardButton("Português 🇵🇹", callback_data="set_lang_pt"),
+            types.InlineKeyboardButton("हिन्दी 🇮🇳", callback_data="set_lang_hi"),
+            types.InlineKeyboardButton("فارسی 🇮🇷", callback_data="set_lang_fa")
+        )
         bot.reply_to(message, "🌐 Choose your language / اختر لغتك:", reply_markup=markup)
 
 # 9. توليد الفاتورة عند اختيار باقة

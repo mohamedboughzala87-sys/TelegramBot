@@ -102,8 +102,7 @@ def send_welcome(message):
     init_db()
     user_id = message.from_user.id; lang = get_user_lang(user_id); texts = LOCALES.get(lang, LOCALES['ar'])
     bot.reply_to(message, f"{texts['welcome']}\n\n{texts['choose']}", reply_markup=get_main_menu(lang), parse_mode="Markdown")
-
-# 8. استقبال الرسائل وإظهار خيارات الأزرار بجميع اللغات العالمية آلياً
+    # 8. استقبال الرسائل وإظهار خيارات الأزرار بجميع اللغات العالمية آلياً
 @bot.message_handler(func=lambda message: True)
 def handle_buttons(message):
     user_id = message.from_user.id
@@ -119,7 +118,9 @@ def handle_buttons(message):
     elif is_promo:
         markup = types.InlineKeyboardMarkup()
         for pkg_id, pkg in PACKAGES.items():
-            markup.add(types.InlineKeyboardButton(f"{pkg.get(lang, pkg['ar'])} - {pkg['price']}\$", callback_data=f"buy_{pkg_id}"))
+            # تم إصلاح عرض اسم الباقة ليتطابق تماماً مع اللغة التي اختارها المستخدم دون تداخل
+            pkg_name = pkg.get(lang, pkg['ar'])
+            markup.add(types.InlineKeyboardButton(f"{pkg_name} - {pkg['price']}\$", callback_data=f"buy_{pkg_id}"))
         bot.reply_to(message, texts['pkg_title'], reply_markup=markup, parse_mode="Markdown")
     elif is_lang:
         markup = types.InlineKeyboardMarkup(row_width=2)
@@ -137,11 +138,14 @@ def handle_buttons(message):
         )
         bot.reply_to(message, "🌐 Choose your language / اختر لغتك:", reply_markup=markup)
 
-# 9. توليد الفاتورة عند اختيار باقة
+# 9. توليد الفاتورة عند اختيار باقة (تم إصلاح استخراج معرف الباقة لمنع التجمد)
 @bot.callback_query_handler(func=lambda call: call.data.startswith('buy_'))
 def callback_buy(call):
-    user_id = call.from_user.id; lang = get_user_lang(user_id); texts = LOCALES.get(lang, LOCALES['ar'])
-    pkg_id = call.data.replace('buy_', ''); pkg = PACKAGES.get(pkg_id)
+    user_id = call.from_user.id
+    lang = get_user_lang(user_id)
+    texts = LOCALES.get(lang, LOCALES['ar'])
+    pkg_id = call.data.replace('buy_', '')
+    pkg = PACKAGES.get(pkg_id)
     if pkg:
         order_id = create_order(user_id, pkg_id, pkg['price'])
         invoice_text = texts['invoice'].format(order_id=order_id, name=pkg.get(lang, pkg['ar']), price=pkg['price'], wallet=MY_USDT_WALLET)
@@ -152,13 +156,14 @@ def callback_buy(call):
 # 10. فحص وتأكيد الدفع آلياً عبر البلوكشين وإرسال الإشعارات
 @bot.callback_query_handler(func=lambda call: call.data.startswith('verify_'))
 def callback_verify(call):
-    order_id = call.data.replace('verify_', ''); order = get_order(order_id)
+    order_id = call.data.replace('verify_', '')
+    order = get_order(order_id)
     if order:
         buyer_id, package_id, price, status = order
         if status == 'completed':
             bot.answer_callback_query(call.id, "✅ هذا الطلب مفعل ومكتمل سابقاً!")
             return
-        bot.answer_callback_query(call.id, "🔍 Jari fahs al blockchain...")
+        bot.answer_callback_query(call.id, "🔍 جاري فحص البلوكشين...")
         if check_blockchain_payment(MY_USDT_WALLET, price):
             update_order_status(order_id, 'completed')
             bot.send_message(call.message.chat.id, f"🎉 **تم تأكيد الدفع بنجاح!**\n\nجاري تجهيز طلبك رقم `#{order_id}` تلقائياً وسيتم إرسال المشتركين لقناتك فوراً.")
@@ -169,11 +174,14 @@ def callback_verify(call):
 # 11. استقبال خيارات الأزرار المضمنة (Inline Buttons) لتغيير اللغة فوراً
 @bot.callback_query_handler(func=lambda call: call.data.startswith('set_lang_'))
 def callback_language(call):
-    user_id = call.from_user.id; new_lang = call.data.replace('set_lang_', ''); set_user_lang(user_id, new_lang)
-    texts = LOCALES.get(new_lang, LOCALES['ar']); bot.answer_callback_query(call.id, "✅ Done / تم التحديث")
+    user_id = call.from_user.id
+    new_lang = call.data.replace('set_lang_', '')
+    set_user_lang(user_id, new_lang)
+    texts = LOCALES.get(new_lang, LOCALES['ar'])
+    bot.answer_callback_query(call.id, "✅ Done / تم التحديث")
     bot.send_message(call.message.chat.id, f"✅ {texts['welcome']}", reply_markup=get_main_menu(new_lang), parse_mode="Markdown")
 
-# 12. تشغيل البوت بشكل لانهائي ومستمر بأمان كامل
+# 12. تشغيل البوت بشكل لانهائي ومستمر
 if __name__ == "__main__":
     init_db()
-    bot.infinity_polling(timeout=10, long_polling_timeout=5)
+    bot.infinity_polling(timeout=10, long_polling_timeout=5).

@@ -102,6 +102,7 @@ def send_welcome(message):
     init_db()
     user_id = message.from_user.id; lang = get_user_lang(user_id); texts = LOCALES.get(lang, LOCALES['ar'])
     bot.reply_to(message, f"{texts['welcome']}\n\n{texts['choose']}", reply_markup=get_main_menu(lang), parse_mode="Markdown")
+
 # 8. استقبال الرسائل وإظهار خيارات الأزرار بجميع اللغات العالمية آلياً
 @bot.message_handler(func=lambda message: True)
 def handle_buttons(message):

@@ -165,15 +165,12 @@ def callback_verify(call):
         else:
             bot.send_message(call.message.chat.id, "❌ **لم نكتشف أي تحويل جديد بهذه القيمة حتى الآن.**\n\nتأكد من إرسال المبلغ الصحيح وانتظر دقيقة ثم اضغط على الزر مرة أخرى.")
 
-# 11. استقبال خيارات الأزرار المضمنة لتغيير اللغة فوراً وبشكل متطابق
-@bot.callback_query_handler(func=lambda call: call.data.startswith('lang_'))
+# 11. استقبال خيارات الأزرار المضمنة (Inline Buttons) لتغيير اللغة فوراً
+@bot.callback_query_handler(func=lambda call: call.data.startswith('set_lang_'))
 def callback_language(call):
-    user_id = call.from_user.id
-    new_lang = call.data.replace('lang_', '')
-    set_user_lang(user_id, new_lang)
-    texts = LOCALES.get(new_lang, LOCALES['ar'])
-    bot.answer_callback_query(call.id, "✅ Done / تم التحديث")
-    bot.send_message(call.message.chat.id, f"✅ {texts['welcome']}\n\n{texts['choose']}", reply_markup=get_main_menu(new_lang), parse_mode="Markdown")
+    user_id = call.from_user.id; new_lang = call.data.replace('set_lang_', ''); set_user_lang(user_id, new_lang)
+    texts = LOCALES.get(new_lang, LOCALES['ar']); bot.answer_callback_query(call.id, "✅ Done / تم التحديث")
+    bot.send_message(call.message.chat.id, f"✅ {texts['welcome']}", reply_markup=get_main_menu(new_lang), parse_mode="Markdown")
 
 # 12. تشغيل البوت بشكل لانهائي ومستمر
 bot.infinity_polling()
